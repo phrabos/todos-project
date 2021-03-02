@@ -92,5 +92,16 @@ describe('app routes', () => {
 
       expect(emptyTodoList.body).toEqual('');
     }); 
+
+    test('deletes an item', async() => {
+
+      const data = await fakeRequest(app)
+        .delete('/api/todos/4')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(dbTestTodo);
+    });
   });
 });

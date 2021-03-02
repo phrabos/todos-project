@@ -74,16 +74,23 @@ describe('app routes', () => {
       ]);
     });
 
-    test('creates a todo list item for user jon@user.com', async() => {
+    test('returns a single todo with matching id', async() => {
 
       const data = await fakeRequest(app)
-        .post('/api/todos')
+        .get('/api/todos/4')
         .set('Authorization', token)
-        .send(testTodo1)
         .expect('Content-Type', /json/)
         .expect(200);
 
       expect(data.body).toEqual(dbTestTodo);
+
+      const emptyTodoList = await fakeRequest(app)
+        .get('/api/todos/100')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(emptyTodoList.body).toEqual('');
     }); 
   });
 });

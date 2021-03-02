@@ -103,5 +103,28 @@ describe('app routes', () => {
 
       expect(data.body).toEqual(dbTestTodo);
     });
+
+    test('updates an item', async() => {
+      const revisedTodo = {
+        todo: 'code challenge',
+        completed: true,
+      };
+
+      const dbRevisedTodo = {
+        todo:'code challenge',
+        completed: true,
+        user_id: 2,
+        id: 1,
+      };
+
+      const data = await fakeRequest(app)
+        .put('/api/todos/1')
+        .set('Authorization', token)
+        .send(revisedTodo)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(dbRevisedTodo);
+    });
   });
 });

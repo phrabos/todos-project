@@ -31,35 +31,59 @@ describe('app routes', () => {
       return client.end(done);
     });
 
-    test('returns animals', async() => {
+    const testTodo1 = {
+      todo: 'test todo item',
+      completed: false,
+    };
 
-      const expectation = [
-        {
-          'id': 1,
-          'name': 'bessie',
-          'coolfactor': 3,
-          'owner_id': 1
-        },
-        {
-          'id': 2,
-          'name': 'jumpy',
-          'coolfactor': 4,
-          'owner_id': 1
-        },
-        {
-          'id': 3,
-          'name': 'spot',
-          'coolfactor': 10,
-          'owner_id': 1
-        }
-      ];
+
+    const dbTestTodo = {
+      todo:'test todo item',
+      completed: false,
+      user_id: 2,
+      id: 4,
+    };
+    
+    test('creates a todo list item for user jon@user.com', async() => {
 
       const data = await fakeRequest(app)
-        .get('/animals')
+        .post('/api/todos')
+        .set('Authorization', token)
+        .send(testTodo1)
         .expect('Content-Type', /json/)
         .expect(200);
 
-      expect(data.body).toEqual(expectation);
+      expect(data.body).toEqual(dbTestTodo);
     });
+
+    test('returns all todo list items for user jon@user.com', async() => {
+
+      const data = await fakeRequest(app)
+        .get('/api/todos')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual([
+        {
+          todo:'test todo item',
+          completed: false,
+          user_id: 2,
+          id: 4,
+        }
+      ]);
+    });
+
+    test('creates a todo list item for user jon@user.com', async() => {
+
+      const data = await fakeRequest(app)
+        .post('/api/todos')
+        .set('Authorization', token)
+        .send(testTodo1)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(dbTestTodo);
+    }); 
   });
 });
